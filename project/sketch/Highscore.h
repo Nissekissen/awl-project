@@ -5,8 +5,9 @@ class Highscore {
     public:
         Highscore();
         void addScore(int score);
-        void getScores(int* scores);
+        void getScores(int *scores);
         void save();
+        void resetScores();
     private:
         int highscores[4] = {0};
         int readScores();

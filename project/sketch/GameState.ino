@@ -11,6 +11,8 @@ GameState::GameState() {
         btns[i].setLamp(LOW);
     }
 
+    // highscore.resetScores();
+
     running = true;
 
     nextBtn = getNextRandomBtn();
@@ -23,6 +25,7 @@ GameState::GameState() {
 
     lcd.print("Score: ");
     lcd.print(score);
+
 }
 
 int GameState::getNextBtn() {
@@ -34,18 +37,13 @@ bool GameState::isRunning() {
 }
 
 void GameState::loop() {
-    // Serial.println(timer);
     for (auto btn: btns) {
         btn.loop();
         if (btn.isPressed() == HIGH) {
-            Serial.print("Pressed: ");
-            Serial.print(getBtnIndex(btn));
-            Serial.print(", Correct: ");
-            Serial.println(nextBtn);
             if (getBtnIndex(btn) == nextBtn) { // If the correct button is pressed
                 btn.setLamp(LOW);
-                score += scoreTimer;
-                lcd.clear();
+                score += static_cast<int>(scoreTimer);
+                lcd.clear(); 
                 lcd.print("Score: ");
                 lcd.print(score);
 
@@ -61,8 +59,6 @@ void GameState::loop() {
 
                 scoreTimer = 100;
                 
-                lcd.setCursor(0, 1);
-                lcd.print("    ");
 
             } else { // If the wrong button is pressed
                 btns[nextBtn].setLamp(LOW);
@@ -96,7 +92,7 @@ void GameState::loop() {
         }
     }
     if (scoreTimer > 10) {
-        scoreTimer--;
+        scoreTimer -= 0.5;
     }
 
     if (timer <= 0) {
@@ -106,7 +102,7 @@ void GameState::loop() {
 
     }
     
-    // timer--;
+    timer--;
     delay(25);
 }
 
@@ -123,7 +119,7 @@ int GameState::getBtnIndex(Button btn) {
 
 int GameState::getBtnsLength() {
     int c = 0;
-    for (auto i: btns) {
+    for (auto i : btns) {
         c++;
     }
     return c;
@@ -132,6 +128,7 @@ int GameState::getBtnsLength() {
 int GameState::getNextRandomBtn() {
     int btn;
     do {
+        randomSeed(analogRead(0));
         btn = random(0, getBtnsLength());
     } while (btn == lastBtn);
     return btn;
@@ -139,14 +136,20 @@ int GameState::getNextRandomBtn() {
 
 void GameState::gameOver() {
 
-    for (auto btn: btns) {
+    for (auto btn : btns) {
         btn.setLamp(LOW);
     }
+
+
+    highscore.getScores(highscores);
+
+    // Serial.println(highscores[0]);
 
     highscore.addScore(score);
     highscore.save();
     highscore.getScores(highscores);
 
+    // highscore.resetScores();
 
 
     lcd.clear();
@@ -171,6 +174,6 @@ void GameState::gameOver() {
     lcd.clear();
     lcd.print("Press start to");
     lcd.setCursor(0, 1);
-    lcd.print("play!");
+    lcd.print("play again!");
 
 }

@@ -49,6 +49,13 @@ void Highscore::writeScores() {
     }
 }
 
+void Highscore::resetScores() {
+  for (int i = 0; i < 3; i++) {
+      long val = 0;
+      EEPROMWritelong(i * 4, 0);
+  }
+}
+
 void Highscore::save() {
     writeScores();
 }

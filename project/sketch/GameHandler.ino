@@ -2,8 +2,8 @@
 #include "GameState.h"
 
 GameHandler::GameHandler() {
-    restartBtn.setBtnPin(48);
-    pinMode(48, INPUT);
+    restartBtn.setBtnPin(6);
+    pinMode(6, INPUT);
 }
 
 void GameHandler::restart() {
@@ -11,9 +11,10 @@ void GameHandler::restart() {
 }
 
 void GameHandler::loop() {
-    // restartBtn.loop();
+    restartBtn.loop();                                                                                                                                                          §
     if (restartBtn.isPressed()) {
-        // restart();
+        Serial.println("Pressed!");
+        restart();
     }
     if (gameState.isRunning()) {
         gameState.loop();

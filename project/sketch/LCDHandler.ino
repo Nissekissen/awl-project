@@ -1,17 +1,13 @@
 #include "LCDHandler.h"
 
 
-LCDHandler::setCursor(int x, int y) {
+void LCDHandler::setCursor(int x, int y) {
     currentDisplay = y;
     cursorX = x % 8;
     cursorY = floor(x / 8);
-    Serial.print(cursorX);
-    Serial.print(" ");
-    Serial.print(cursorY);
-    Serial.print("\n");
 }
 
-LCDHandler::print(String text) {
+void LCDHandler::print(String text) {
     for (int i = 0; i < text.length(); i++) {
         
         if (cursorX >= 8) {
@@ -22,12 +18,13 @@ LCDHandler::print(String text) {
                 currentDisplay++;
             }
         }
+        (currentDisplay == 0 ? lcd1 : lcd2).setCursor(cursorX, cursorY);
         (currentDisplay == 0 ? lcd1 : lcd2).print(text[i]);
         cursorX++;
     }
 }
 
-LCDHandler::print(int text) {
+void LCDHandler::print(int text) {
     String str = String(text);
     for (int i = 0; i < str.length(); i++) {
         
@@ -45,12 +42,13 @@ LCDHandler::print(int text) {
         Serial.print(" ");
         Serial.print(cursorY);
         Serial.print("\n");
+        (currentDisplay == 0 ? lcd1 : lcd2).setCursor(cursorX, cursorY);
         (currentDisplay == 0 ? lcd1 : lcd2).print(str[i]);
         cursorX++;
     }
 }
 
-LCDHandler::clear() {
+void LCDHandler::clear() {
     lcd1.clear();
     lcd2.clear();
     currentDisplay = 0;
@@ -58,7 +56,7 @@ LCDHandler::clear() {
     cursorY = 0;
 }
 
-LCDHandler::begin(int x, int y) {
+void LCDHandler::begin(int x, int y) {
     lcd1.begin(8, 2);
     lcd2.begin(8, 2);
 }

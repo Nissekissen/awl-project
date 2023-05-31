@@ -22,8 +22,8 @@ class GameState {
         int getNextRandomBtn();
         LCDHandler lcd;
         int score;
-        int scoreTimer; // Counts down from 100 when a lamp is lit up.
-        int timer = 40 * 15;
+        float scoreTimer; // Counts down from 100 when a lamp is lit up.
+        int timer = 40 * 90;
         Highscore highscore;
         int highscores[3];
         bool running;
